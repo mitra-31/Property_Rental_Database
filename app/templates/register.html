@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/login.css')}}">
+</head>
+
+<body>
+    <style>
+        body {
+            background: url("{{url_for('static',filename='images/bg.jpg')}}");
+            background-size: cover;
+        }
+    </style>
+    <div class="login-box">
+        <h1>Register Here</h1>
+        <form action="" method="POST">
+            <div class="textbox">
+                <input type="text" placeholder="Username" name="username">
+            </div>
+
+            <div class="textbox">
+
+                <input type="email" placeholder="email" name="email">
+            </div>
+            <div class="textbox">
+
+                <input type="text" placeholder="Mobile-no" name="phone">
+            </div>
+            <div class="textbox">
+
+                <input type="text" placeholder="" name="address">
+            </div>
+            <div class="textbox">
+
+                <input type="text" placeholder="" name="city">
+            </div>
+            <div class="textbox">
+
+                <input type="password" placeholder="Password" name="password">
+            </div>
+
+            <button type="submit" class="btn">Sign-up</button>
+        </form>
+        <h4><a href="/login" style="color: Black;">Already User?</a></h4>
+    </div>
+</body>
+
+</html>
