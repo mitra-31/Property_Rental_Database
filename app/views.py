@@ -1,23 +1,36 @@
-from app import app,mysql,save_images,save_image
-from flask import render_template,url_for,request,redirect,session
+from app import app,mysql,save_images,save_image     #from __init__.py flask object 
+from flask import render_template,url_for,request,redirect,session   
 from datetime import datetime
 
-@app.route("/")
+#render_template - it returns html pages
+#url_for - it is used to return images in html
+#request - its send message to http 
+# redirect
+#session - its dict type it contains user_id until user is in session 
+#@app.route() //its called decorators in python it takes two arguments .1st url or path 2nd methods -> POST,GET
+
+@app.route("/") #home page
 def home():
     return render_template("home.html")
 
-@app.route("/login",methods=['POST','GET'])
+@app.route("/login",methods=['POST','GET'])   #
 def login():
     if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
+        # MYSQL 
+        # conn establishing 
+        # .execute method it takes sql queries
+        # .fetchone returns one tuple ()
+        # .fetchall returns all 
+        # .
         cur = mysql.connection.cursor()
         cur.execute("SELECT user_id,user_name,password FROM users WHERE user_name = '{0}'".format(username))
         auth = cur.fetchone()
         mysql.connection.commit()
         cur.close()
         if auth[1] == username and auth[2] == password:
-            session['userid'] = auth[0]
+            session['userid'] = auth[0] #
             return redirect("/dashboard")
         else:
             return redirect("/login")
@@ -34,7 +47,7 @@ def register():
         password = request.form.get('password')
         cur = mysql.connection.cursor()
         cur.execute("""INSERT INTO users(user_name,email_id,phone,adress,city,password) 
-                            VALUES(%s,%s,%s,%s)""",(username,email,phone,address,city,password))
+                            VALUES(%s,%s,%s,%s,%s,%s)""",(username,email,phone,address,city,password))
         mysql.connection.commit()
         cur.close()
     return render_template("register.html")
@@ -46,7 +59,7 @@ def dashboard():
         cur.execute("SELECT user_name FROM users WHERE user_id = '{0}'".format(str(session['userid'])))
         username = cur.fetchone()
         cur.execute("SELECT p_id,p_sellername,p_address,p_city,p_cost,p_thumbnail FROM properties WHERE p_status = 'AVL'")
-        Property = cur.fetchall() 
+        Property = cur.fetchall()  #((1,ani,bly,bly,20,img1.jpeg),(1,ani,bly,bly,20,img1.jpeg),(1,ani,bly,bly,20,img1.jpeg),(1,ani,bly,bly,20,img1.jpeg),)
         mysql.connection.commit()
         cur.close()
         return render_template("dashboard.html",username=username[0].upper(),properties=Property)
@@ -116,7 +129,7 @@ def buy():
             Property = cur.fetchone()
             mysql.connection.commit()
             cur.close()
-            images = Property[8].split(",")
+            images = Property[8].split(",") #img1,img2,img3...->[img1,img2,img3]
     return render_template("property.html",Property=Property,images=images[1:],user=session['userid'])
 
 @app.route("/payment",methods=["POST","GET"])
